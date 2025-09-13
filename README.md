@@ -46,7 +46,7 @@ text
 
 - `server.py` - Flask backend server
 - `util.py` - Utility functions for classification and preprocessing
-- `artifacts/` - Saved model and class dictionary JSON
+- `model_ML/` - Saved model and class dictionary JSON
 - `frontend/` - HTML, CSS, JS files for UI
 - `opencv/` - Cascade files for face/eye detection
 - `requirements.txt` - Project dependencies
@@ -59,6 +59,4 @@ PRs and issues are welcome! Please ensure consistent code style and test new fea
 
 MIT License.
 
----
-
-(Adjust placeholders like <your-username> and <repo-name> as needed.)
+V RAVINDRA NATH
