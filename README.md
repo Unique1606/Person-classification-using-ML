@@ -1,4 +1,4 @@
-# Sports Celebrity Image Classification
+# Celebrity Image Classification
 
 A Flask API and web frontend for classifying images of sports celebrities using a machine learning model.
 
