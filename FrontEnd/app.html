@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Person Classifier</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+  <!-- Custom -->
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="brand">
+        <div class="logo-glow">⚡</div>
+        <div class="title">Person Classifier</div>
+      </div>
+      <div class="server-note" id="serverNote">Server: <span id="serverStatus">Not checked</span></div>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <section class="row mb-4">
+      <div class="col-md-6">
+        <div class="hero-card glass p-3">
+          <h4 class="mb-2">Upload image</h4>
+          <p class="muted">Drag & drop or click to select a single image. Face detection requires a clear frontal photo.</p>
+
+          <!-- Drag & Drop area -->
+          <div id="dropArea" class="droparea" tabindex="0" aria-label="Drop image here or click to browse">
+            <input type="file" id="fileInput" accept="image/*" />
+            <div class="drop-inner">
+              <img src="./images/upload.png" alt="upload" class="upload-illustration">
+              <div class="drop-text">Drop an image here or <span class="link-like" id="browseBtn">browse</span></div>
+              <small class="hint">Supported: JPG, PNG. Single image only.</small>
+            </div>
+          </div>
+
+          <div id="preview" class="text-center mt-3" aria-live="polite"></div>
+
+          <div class="d-flex align-items-center mt-3">
+            <button id="classifyBtn" class="btn btn-primary mr-2">Classify</button>
+            <button id="resetBtn" class="btn btn-outline-secondary">Reset</button>
+            <div class="ml-auto">
+              <label class="small text-muted">Confidence threshold</label>
+              <input id="threshold" type="range" min="0" max="100" value="0">
+              <span id="thresholdLabel" class="small pl-2">0%</span>
+            </div>
+          </div>
+
+          <div id="loading" class="loading mt-3" hidden>
+            <div class="spinner-border" role="status"></div>
+            <span class="ml-2">Classifying — hold tight...</span>
+          </div>
+
+          <div id="error" class="error mt-3" role="alert" hidden>
+            Can't classify image. Classifier couldn't detect a face with two eyes.
+          </div>
+        </div>
+
+        <!-- History panel -->
+        <div class="glass mt-3 p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Recent results</h6>
+            <button id="clearHistory" class="btn btn-sm btn-link">Clear</button>
+          </div>
+          <ul id="historyList" class="history-list mt-2"></ul>
+        </div>
+      </div>
+
+      <!-- Result column -->
+      <div class="col-md-6">
+        <div id="resultCard" class="glass p-3" hidden>
+          <div class="d-flex align-items-center">
+            <div id="predImage" class="pred-image rounded mr-3"></div>
+            <div>
+              <h5 id="predLabel" class="mb-1">—</h5>
+              <div id="predScore" class="muted">—</div>
+            </div>
+            <div class="ml-auto">
+              <button id="downloadJson" class="btn btn-sm btn-outline-light">Download JSON</button>
+              <button id="copyJson" class="btn btn-sm btn-outline-light">Copy</button>
+            </div>
+          </div>
+
+          <hr>
+
+          <div id="probabilities" class="prob-list"></div>
+
+          <div class="mt-3 text-right">
+            <button id="showRawBtn" class="btn btn-sm btn-secondary">Show raw</button>
+          </div>
+
+        </div>
+
+        <!-- Default placeholder -->
+        <div id="placeholder" class="glass p-3 text-center muted">
+          <h6>Prediction preview</h6>
+          <p class="small">Upload an image and click <strong>Classify</strong> to see results here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Celebrity quick cards (click to show sample image in preview) -->
+    <section class="row mb-4">
+      <div class="col-12">
+        <div class="quick-grid">
+          <div class="quick-card" data-src="./images/messi.jpeg" data-player="lionel_messi">
+            <img src="./images/messi.jpg" alt="Messi"><div class="label">Lionel Messi</div>
+          </div>
+          <div class="quick-card" data-src="./images/sharapova.jpeg" data-player="maria_sharapova">
+            <img src="./images/MJ.jpg" alt="michel jackson"><div class="label">Michael jackson</div>
+          </div>
+          <div class="quick-card" data-src="./images/federer.jpeg" data-player="roger_federer">
+            <img src="./images/Modi.jpg" alt="narendra modi"><div class="label">Narendra Modi</div>
+          </div>
+          <div class="quick-card" data-src="./images/serena.jpeg" data-player="serena_williams">
+            <img src="./images/PawanKalyan.jpg" alt="Pawan-Kalyan"><div class="label">Pawan Kalyan</div>
+          </div>
+          <div class="quick-card" data-src="./images/virat.jpeg" data-player="virat_kohli">
+            <img src="./images/tata.jpg" alt="ratan tata"><div class="label">Ratan Tata</div>
+          </div>
+          <div class="quick-card" data-src="./images/virat.jpeg" data-player="virat_kohli">
+            <img src="./images/virat.jpg" alt="Virat"><div class="label">Virat Kohli</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container text-center small muted">Built for testing — run your Flask API and keep it open while using this UI.</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

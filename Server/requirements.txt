@@ -1,0 +1,19 @@
+Python 3.x (latest recommended)
+
+Flask: Web framework
+
+Flask-CORS: To allow cross-origin requests from frontend
+
+OpenCV (cv2): For image processing
+
+NumPy: Numeric processing
+
+joblib: Loading your saved ML model
+
+pywt (PyWavelets): For wavelet transforms in preprocessing
+
+
+
+# run this commands 
+pip install flask flask-cors numpy opencv-python joblib pywavelets
+pip install bing-image-downloader
